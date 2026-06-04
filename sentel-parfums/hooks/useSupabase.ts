@@ -18,6 +18,11 @@ export function useProducts(options?: {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // Temporarily using mock data only — re-enable Supabase after updating DB records
+    setLoading(false)
+    return
+
+    /*
     if (!supabase) {
       setLoading(false)
       return
@@ -63,6 +68,7 @@ export function useProducts(options?: {
     }
 
     fetchProducts()
+    */
   }, [options?.featured, options?.category, options?.scentFamily, options?.search, options?.limit])
 
   return { products, loading, error }
@@ -74,6 +80,11 @@ export function useProduct(id: string) {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // Temporarily using mock data only — re-enable Supabase after updating DB records
+    setLoading(false)
+    return
+
+    /*
     if (!supabase) {
       setLoading(false)
       return
@@ -106,6 +117,7 @@ export function useProduct(id: string) {
     }
 
     if (id) fetchProduct()
+    */
   }, [id])
 
   return { product, loading, error }
