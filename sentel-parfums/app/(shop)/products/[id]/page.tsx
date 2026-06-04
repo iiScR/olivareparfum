@@ -13,7 +13,7 @@ import type { Product } from '@/types'
 
 // Mock product for demo
 const product: Product = {
-  id: '1',
+  id: 'a1111111-1111-1111-1111-111111111111',
   name: 'Santal Noir',
   brand_inspiration: 'Tom Ford',
   description: 'Un santal crémeux et fumé qui évoque le luxe intemporel. Cette création s\'ouvre sur des notes épicées de cardamome et de gingembre, avant de révéler un cœur de santal précieux enveloppé d\'iris et de cèdre. Le fond chaud d\'ambre, de vanille et de musc laisse une empreinte sensuelle et durable.',
@@ -38,25 +38,25 @@ const product: Product = {
 
 const relatedProducts: Product[] = [
   {
-    id: '7', name: 'Bois Mystique', brand_inspiration: 'Tom Ford', description: '',
+    id: 'a7777777-7777-7777-7777-777777777777', name: 'Bois Mystique', brand_inspiration: 'Tom Ford', description: '',
     price: 95, sizes: [{ size: '10ml', price: 48 }, { size: '50ml', price: 95 }, { size: '100ml', price: 159 }],
     stock: 20, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 11, scent_family: 'Woody',
     images: ['/images/perfumes/perfume-2.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
   {
-    id: '3', name: 'Oud Impérial', brand_inspiration: 'YSL', description: '',
+    id: 'a3333333-3333-3333-3333-333333333333', name: 'Oud Impérial', brand_inspiration: 'YSL', description: '',
     price: 99, sizes: [{ size: '10ml', price: 50 }, { size: '50ml', price: 99 }, { size: '100ml', price: 169 }],
     stock: 25, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 12, scent_family: 'Oriental',
     images: ['/images/perfumes/perfume-4.png'], featured: true, category_id: null, created_at: '', updated_at: '',
   },
   {
-    id: '5', name: 'Vanille Nuit', brand_inspiration: 'Kayali', description: '',
+    id: 'a5555555-5555-5555-5555-555555555555', name: 'Vanille Nuit', brand_inspiration: 'Kayali', description: '',
     price: 75, sizes: [{ size: '10ml', price: 38 }, { size: '50ml', price: 75 }, { size: '100ml', price: 129 }],
     stock: 40, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 9, scent_family: 'Gourmand',
     images: [], featured: true, category_id: null, created_at: '', updated_at: '',
   },
   {
-    id: '4', name: 'Citrus Doré', brand_inspiration: 'Louis Vuitton', description: '',
+    id: 'a4444444-4444-4444-4444-444444444444', name: 'Citrus Doré', brand_inspiration: 'Louis Vuitton', description: '',
     price: 69, sizes: [{ size: '10ml', price: 35 }, { size: '50ml', price: 69 }, { size: '100ml', price: 119 }],
     stock: 60, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 6, scent_family: 'Fresh',
     images: ['/images/perfumes/perfume-8.png'], featured: false, category_id: null, created_at: '', updated_at: '',

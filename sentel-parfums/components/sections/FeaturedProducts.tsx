@@ -10,7 +10,7 @@ import type { Product } from '@/types'
 
 const mockProducts: Product[] = [
   {
-    id: '1',
+    id: 'a1111111-1111-1111-1111-111111111111',
     name: 'Santal Noir',
     brand_inspiration: 'Tom Ford',
     description: 'Un santal crémeux et fumé, enveloppant comme une étole de cachemire.',
@@ -29,7 +29,7 @@ const mockProducts: Product[] = [
     updated_at: '',
   },
   {
-    id: '2',
+    id: 'a2222222-2222-2222-2222-222222222222',
     name: 'Rose Velours',
     brand_inspiration: 'Chanel',
     description: 'Une rose damascène veloutée, moderne et intemporelle.',
@@ -48,7 +48,7 @@ const mockProducts: Product[] = [
     updated_at: '',
   },
   {
-    id: '3',
+    id: 'a3333333-3333-3333-3333-333333333333',
     name: 'Oud Impérial',
     brand_inspiration: 'YSL',
     description: 'L\'oud dans toute sa splendeur : profond, boisé, légèrement fumé.',
@@ -67,7 +67,7 @@ const mockProducts: Product[] = [
     updated_at: '',
   },
   {
-    id: '4',
+    id: 'a4444444-4444-4444-4444-444444444444',
     name: 'Citrus Doré',
     brand_inspiration: 'Louis Vuitton',
     description: 'Un éclat citrus frais et sophistiqué, comme une matinée méditerranéenne.',
@@ -86,7 +86,7 @@ const mockProducts: Product[] = [
     updated_at: '',
   },
   {
-    id: '5',
+    id: 'a5555555-5555-5555-5555-555555555555',
     name: 'Vanille Nuit',
     brand_inspiration: 'Kayali',
     description: 'Une vanille gourmande et enveloppante, parfaite pour les soirées.',
@@ -105,7 +105,7 @@ const mockProducts: Product[] = [
     updated_at: '',
   },
   {
-    id: '6',
+    id: 'a6666666-6666-6666-6666-666666666666',
     name: 'Iris Argent',
     brand_inspiration: 'Prada',
     description: 'Un iris poudré et métallique, d\'une élégance discrète.',
@@ -124,7 +124,7 @@ const mockProducts: Product[] = [
     updated_at: '',
   },
   {
-    id: '7',
+    id: 'a7777777-7777-7777-7777-777777777777',
     name: 'Bois Mystique',
     brand_inspiration: 'Tom Ford',
     description: 'Un boisé profond et envoûtant, entre mystère et sophistication.',
@@ -143,7 +143,7 @@ const mockProducts: Product[] = [
     updated_at: '',
   },
   {
-    id: '8',
+    id: 'a8888888-8888-8888-8888-888888888888',
     name: 'Jardin Secret',
     brand_inspiration: 'Chanel',
     description: 'Un bouquet floral frais et lumineux, comme une promenade au printemps.',
