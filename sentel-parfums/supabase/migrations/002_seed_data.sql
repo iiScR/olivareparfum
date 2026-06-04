@@ -28,7 +28,7 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO reviews (id, product_id, name, city, rating, comment) VALUES
   (uuid_generate_v4(), 'a1111111-1111-1111-1111-111111111111', 'Amina B.', 'Casablanca', 5, 'Je suis bluffée par la similarité avec l''original. Fruits Rouges est exactement comme celui de Tom Ford à 5x le prix. Livraison rapide et emballage luxueux.'),
   (uuid_generate_v4(), NULL, 'Karim E.', 'Rabat', 5, 'J''ai acheté le coffret 3 pour 200 MAD pour tester. Résultat : j''ai commandé 3 autres flacons de 50ml la semaine suivante. Qualité exceptionnelle.'),
-  (uuid_generate_v4(), 'a2222222-2222-2222-2222-222222222222', 'Laila M.', 'Marrakech', 5, 'La tenue est impressionnante — 10 heures facilement sur mes vêtements. Agrumes Luxe est devenu mon signature scent. Merci Olivare !'),
+  (uuid_generate_v4(), 'a2222222-2222-2222-2222-222222222222', 'Laila M.', 'Marrakech', 5, 'La tenue est impressionnante — 10 heures facilement sur mes vêtements. Agrumes Luxe est devenu mon signature scent. Merci EMAT SCENTS !'),
   (uuid_generate_v4(), NULL, 'Youssef T.', 'Tanger', 5, 'Service client au top. J''avais une question sur les notes olfactives, ils m''ont répondu en 10 minutes et m''ont conseillé parfaitement.'),
-  (uuid_generate_v4(), NULL, 'Samira K.', 'Agadir', 5, 'J''offre régulièrement Olivare à mes amies. C''est le cadeau parfait : luxueux, abordable, et tout le monde adore. L''emballage est sublime.'),
+  (uuid_generate_v4(), NULL, 'Samira K.', 'Agadir', 5, 'J''offre régulièrement EMAT SCENTS à mes amies. C''est le cadeau parfait : luxueux, abordable, et tout le monde adore. L''emballage est sublime.'),
   (uuid_generate_v4(), 'a3333333-3333-3333-3333-333333333333', 'Omar H.', 'Fès', 4, 'Très bon rapport qualité-prix. Coco Vanille est puissant et sophistiqué. J''apprécie particulièrement la transparence sur les notes olfactives.');

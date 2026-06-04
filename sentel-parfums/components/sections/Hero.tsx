@@ -46,7 +46,7 @@ export function Hero() {
       <div className="hero-bg absolute -top-[10%] left-0 right-0 h-[120%]">
         <img
           src="/images/bg.png"
-          alt="Olivare Parfums"
+          alt="EMAT SCENTS"
           className="hero-bg-img absolute inset-0 w-full h-full object-cover object-top"
         />
         {/* Very light overlay so the image stays visible */}

@@ -314,7 +314,7 @@ export default function CheckoutPage() {
                       <p className="text-sm font-medium mb-2">Instructions de virement :</p>
                       <ul className="text-sm text-text-secondary space-y-1">
                         <li>Banque : CIH Bank</li>
-                        <li>Nom : Olivare Parfums SARL</li>
+                        <li>Nom : EMAT SCENTS SARL</li>
                         <li>RIB : 230 1234 5678 9012 3456 7890 1</li>
                         <li>Montant : {formatPrice(total)}</li>
                         <li className="text-primary">Référence : Votre nom + date</li>

@@ -28,7 +28,7 @@ export function Footer() {
           viewport={{ once: true }}
           className="max-w-2xl mx-auto text-center"
         >
-          <h3 className="heading-md mb-4">Rejoignez l&apos;univers Olivare</h3>
+          <h3 className="heading-md mb-4">Rejoignez l&apos;univers EMAT SCENTS</h3>
           <p className="body-lg mb-8">
             Recevez en avant-première nos nouveautés, offres exclusives et conseils olfactifs.
           </p>
@@ -60,7 +60,7 @@ export function Footer() {
             <Link href="/" className="inline-block mb-4">
               <img
                 src="/images/logo.svg"
-                alt="Olivare Parfums"
+                alt="EMAT SCENTS"
                 className="h-10 w-auto"
               />
             </Link>
@@ -135,7 +135,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3 text-text-secondary text-sm">
                 <Mail className="w-4 h-4 shrink-0 text-primary" />
-                <span>contact@sentelparfums.ma</span>
+                <span>contact@ematscents.com</span>
               </li>
             </ul>
           </div>
@@ -145,7 +145,7 @@ export function Footer() {
       {/* Bottom bar */}
       <div className="section-padding py-6 border-t border-border">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-text-muted text-xs">
-          <p>&copy; {new Date().getFullYear()} Olivare Parfums. Tous droits réservés.</p>
+          <p>&copy; {new Date().getFullYear()} EMAT SCENTS. Tous droits réservés.</p>
           <div className="flex items-center gap-6">
             <Link href="#" className="hover:text-primary transition-colors">Mentions légales</Link>
             <Link href="#" className="hover:text-primary transition-colors">Politique de confidentialité</Link>
