@@ -47,7 +47,7 @@ export function Navbar() {
             >
               <img
                 src="/images/logo.svg"
-                alt="EMAT SCENTS"
+                alt="IZIL PARFUMS"
                 className="h-8 lg:h-10 w-auto"
               />
             </motion.div>

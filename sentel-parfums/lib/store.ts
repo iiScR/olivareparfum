@@ -124,7 +124,7 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: 'ematscents-cart',
+      name: 'izilparfums-cart',
       partialize: (state) => ({
         items: state.items,
         bundleSelections: state.bundleSelections,

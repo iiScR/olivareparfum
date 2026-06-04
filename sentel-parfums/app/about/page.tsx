@@ -23,7 +23,7 @@ const values = [
   {
     icon: Heart,
     title: 'Passion marocaine',
-    description: 'Né au cœur du Maroc, EMAT SCENTS allie les traditions orientales de parfumerie avec les standards internationaux de qualité.',
+    description: 'Né au cœur du Maroc, IZIL PARFUMS allie les traditions orientales de parfumerie avec les standards internationaux de qualité.',
   },
   {
     icon: Leaf,
@@ -71,7 +71,7 @@ export default function AboutPage() {
               <span className="text-gradient">accessible à tous</span>
             </h1>
             <p className="body-lg text-lg max-w-2xl mx-auto">
-              EMAT SCENTS est né d&apos;une conviction simple : le luxe olfactif ne devrait pas être
+              IZIL PARFUMS est né d&apos;une conviction simple : le luxe olfactif ne devrait pas être
               un privilège réservé à quelques-uns. Depuis notre création au Maroc, nous
               réinventons l&apos;expérience parfumée.
             </p>
@@ -96,7 +96,7 @@ export default function AboutPage() {
             <div className="story-text">
               <h2 className="heading-md mb-4">Une promesse de qualité</h2>
               <p className="body-lg">
-                Chaque fragrance EMAT SCENTS est le fruit de centaines d&apos;heures de recherche et
+                Chaque fragrance IZIL PARFUMS est le fruit de centaines d&apos;heures de recherche et
                 développement. Nos parfumeurs analysent les pyramides olfactives des créations 
                 les plus iconiques pour reproduire fidèlement chaque note, chaque accord, 
                 chaque nuance. Le résultat ? Une similarité de 93% avec les originaux, 
@@ -107,7 +107,7 @@ export default function AboutPage() {
             <div className="story-text">
               <h2 className="heading-md mb-4">L&apos;avenir de la parfumerie</h2>
               <p className="body-lg">
-                Aujourd&apos;hui, EMAT SCENTS compte plus de 15 000 clients satisfaits à travers
+                Aujourd&apos;hui, IZIL PARFUMS compte plus de 15 000 clients satisfaits à travers
                 le Maroc. Notre ambition ? Devenir la référence de la parfumerie accessible 
                 en Afrique du Nord, tout en préservant l&apos;excellence et l&apos;authenticité 
                 qui font notre identité.
@@ -150,7 +150,7 @@ export default function AboutPage() {
       <section className="section-padding py-20 lg:py-28">
         <div className="max-w-4xl mx-auto">
           <AnimatedSection className="text-center mb-12">
-            <h2 className="heading-lg">EMAT SCENTS en chiffres</h2>
+            <h2 className="heading-lg">IZIL PARFUMS en chiffres</h2>
           </AnimatedSection>
 
           <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-8">

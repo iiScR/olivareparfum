@@ -23,7 +23,7 @@ const reviews = [
     name: 'Laila M.',
     city: 'Marrakech',
     rating: 5,
-    comment: 'La tenue est impressionnante — 10 heures facilement sur mes vêtements. Agrumes Luxe est devenu mon signature scent. Merci EMAT SCENTS !',
+    comment: 'La tenue est impressionnante — 10 heures facilement sur mes vêtements. Agrumes Luxe est devenu mon signature scent. Merci IZIL PARFUMS !',
   },
   {
     name: 'Youssef T.',
@@ -35,7 +35,7 @@ const reviews = [
     name: 'Samira K.',
     city: 'Agadir',
     rating: 5,
-    comment: 'J\'offre régulièrement EMAT SCENTS à mes amies. C\'est le cadeau parfait : luxueux, abordable, et tout le monde adore. L\'emballage est sublime.',
+    comment: 'J\'offre régulièrement IZIL PARFUMS à mes amies. C\'est le cadeau parfait : luxueux, abordable, et tout le monde adore. L\'emballage est sublime.',
   },
   {
     name: 'Omar H.',
