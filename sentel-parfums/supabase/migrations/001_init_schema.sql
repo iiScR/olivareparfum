@@ -120,20 +120,20 @@ CREATE POLICY "Products are viewable by everyone" ON products
   FOR SELECT USING (true);
 
 CREATE POLICY "Products are insertable by admins" ON products
-  FOR INSERT WITH CHECK (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+  FOR INSERT WITH CHECK (is_admin(auth.uid()));
 
 CREATE POLICY "Products are updatable by admins" ON products
-  FOR UPDATE USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+  FOR UPDATE USING (is_admin(auth.uid()));
 
 CREATE POLICY "Products are deletable by admins" ON products
-  FOR DELETE USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+  FOR DELETE USING (is_admin(auth.uid()));
 
 -- Categories: anyone can read, only admins can write
 CREATE POLICY "Categories are viewable by everyone" ON categories
   FOR SELECT USING (true);
 
 CREATE POLICY "Categories are manageable by admins" ON categories
-  FOR ALL USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+  FOR ALL USING (is_admin(auth.uid()));
 
 -- Carts: users can see their own, or by session_id
 CREATE POLICY "Users can view own cart" ON carts
@@ -164,13 +164,13 @@ CREATE POLICY "Users can view own orders" ON orders
   FOR SELECT USING (user_id = auth.uid());
 
 CREATE POLICY "Admins can view all orders" ON orders
-  FOR SELECT USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+  FOR SELECT USING (is_admin(auth.uid()));
 
 CREATE POLICY "Users can insert own orders" ON orders
   FOR INSERT WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY "Admins can update orders" ON orders
-  FOR UPDATE USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+  FOR UPDATE USING (is_admin(auth.uid()));
 
 -- Order items: through order ownership
 CREATE POLICY "Users can view own order items" ON order_items
@@ -184,9 +184,17 @@ CREATE POLICY "Users can insert own order items" ON order_items
     EXISTS (SELECT 1 FROM orders o WHERE o.id = order_items.order_id AND o.user_id = auth.uid())
   );
 
+-- Helper function to check if user is admin (SECURITY DEFINER avoids RLS recursion)
+CREATE OR REPLACE FUNCTION is_admin(uid UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM admin_users WHERE user_id = uid);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Admin users: only admins can view
 CREATE POLICY "Admins can view admin_users" ON admin_users
-  FOR SELECT USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+  FOR SELECT USING (is_admin(auth.uid()));
 
 -- Reviews: anyone can read, authenticated users can create
 CREATE POLICY "Reviews are viewable by everyone" ON reviews
