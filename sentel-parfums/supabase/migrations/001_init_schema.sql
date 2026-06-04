@@ -167,7 +167,7 @@ CREATE POLICY "Admins can view all orders" ON orders
   FOR SELECT USING (is_admin(auth.uid()));
 
 CREATE POLICY "Users can insert own orders" ON orders
-  FOR INSERT WITH CHECK (user_id = auth.uid());
+  FOR INSERT WITH CHECK (user_id = auth.uid() OR user_id IS NULL);
 
 CREATE POLICY "Admins can update orders" ON orders
   FOR UPDATE USING (is_admin(auth.uid()));
@@ -181,7 +181,7 @@ CREATE POLICY "Users can view own order items" ON order_items
 
 CREATE POLICY "Users can insert own order items" ON order_items
   FOR INSERT WITH CHECK (
-    EXISTS (SELECT 1 FROM orders o WHERE o.id = order_items.order_id AND o.user_id = auth.uid())
+    EXISTS (SELECT 1 FROM orders o WHERE o.id = order_items.order_id AND (o.user_id = auth.uid() OR o.user_id IS NULL))
   );
 
 -- Helper function to check if user is admin (SECURITY DEFINER avoids RLS recursion)
