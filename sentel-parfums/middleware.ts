@@ -16,26 +16,32 @@ export async function middleware(request: NextRequest) {
     return response
   }
 
-  const supabase = createServerClient(url, key, {
-    cookies: {
-      get(name: string) {
-        return request.cookies.get(name)?.value
+  try {
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          request.cookies.set({ name, value, ...options })
+          response = NextResponse.next({ request: { headers: request.headers } })
+          response.cookies.set({ name, value, ...options })
+        },
+        remove(name: string, options: CookieOptions) {
+          request.cookies.set({ name, value: '', ...options })
+          response = NextResponse.next({ request: { headers: request.headers } })
+          response.cookies.set({ name, value: '', ...options })
+        },
       },
-      set(name: string, value: string, options: CookieOptions) {
-        request.cookies.set({ name, value, ...options })
-        response = NextResponse.next({ request: { headers: request.headers } })
-        response.cookies.set({ name, value, ...options })
-      },
-      remove(name: string, options: CookieOptions) {
-        request.cookies.set({ name, value: '', ...options })
-        response = NextResponse.next({ request: { headers: request.headers } })
-        response.cookies.set({ name, value: '', ...options })
-      },
-    },
-  })
+    })
 
-  // Refresh session if expired
-  await supabase.auth.getUser()
+    // Refresh session if expired
+    await supabase.auth.getUser()
+  } catch (err) {
+    // Silently fail if Supabase is unreachable or misconfigured
+    // This lets the site work even if Supabase has issues
+    console.error('[Middleware] Supabase error:', err)
+  }
 
   return response
 }
