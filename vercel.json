@@ -1,4 +1,7 @@
 {
   "framework": "nextjs",
-  "rootDirectory": "sentel-parfums"
+  "rootDirectory": "sentel-parfums",
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install"
 }
