@@ -45,7 +45,16 @@ export function useProducts(options?: {
         const { data, error } = await query.order('created_at', { ascending: false })
 
         if (error) throw error
-        setProducts(data || [])
+        const normalized = (data || []).map((p: any) => ({
+          ...p,
+          sizes: Array.isArray(p.sizes) ? p.sizes : [],
+          images: Array.isArray(p.images) ? p.images : [],
+          top_notes: Array.isArray(p.top_notes) ? p.top_notes : [],
+          heart_notes: Array.isArray(p.heart_notes) ? p.heart_notes : [],
+          base_notes: Array.isArray(p.base_notes) ? p.base_notes : [],
+          price: typeof p.price === 'string' ? parseFloat(p.price) : p.price,
+        }))
+        setProducts(normalized)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
@@ -78,7 +87,17 @@ export function useProduct(id: string) {
           .single()
 
         if (error) throw error
-        setProduct(data)
+        if (data) {
+          setProduct({
+            ...data,
+            sizes: Array.isArray(data.sizes) ? data.sizes : [],
+            images: Array.isArray(data.images) ? data.images : [],
+            top_notes: Array.isArray(data.top_notes) ? data.top_notes : [],
+            heart_notes: Array.isArray(data.heart_notes) ? data.heart_notes : [],
+            base_notes: Array.isArray(data.base_notes) ? data.base_notes : [],
+            price: typeof data.price === 'string' ? parseFloat(data.price) : data.price,
+          })
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
@@ -102,8 +121,12 @@ export function useCategories() {
       return
     }
     async function fetchCategories() {
-      const { data } = await supabase.from('categories').select('*').order('name')
-      setCategories(data || [])
+      const { data, error } = await supabase.from('categories').select('*').order('name')
+      if (error) {
+        setCategories([])
+      } else {
+        setCategories(data || [])
+      }
       setLoading(false)
     }
 
@@ -127,8 +150,12 @@ export function useReviews(productId?: string) {
       if (productId) {
         query = query.eq('product_id', productId)
       }
-      const { data } = await query.order('created_at', { ascending: false })
-      setReviews(data || [])
+      const { data, error } = await query.order('created_at', { ascending: false })
+      if (error) {
+        setReviews([])
+      } else {
+        setReviews(data || [])
+      }
       setLoading(false)
     }
 
@@ -174,14 +201,22 @@ export function useCart() {
       return
     }
     async function fetchCart() {
-      const { data: carts } = await supabase.from('carts').select('*').limit(1)
+      const { data: carts, error: cartError } = await supabase.from('carts').select('*').limit(1)
       
-      if (carts && carts.length > 0) {
-        const { data: items } = await supabase
-          .from('cart_items')
-          .select('*, product:products(*)')
-          .eq('cart_id', carts[0].id)
-        
+      if (cartError || !carts || carts.length === 0) {
+        setCartItems([])
+        setLoading(false)
+        return
+      }
+
+      const { data: items, error: itemsError } = await supabase
+        .from('cart_items')
+        .select('*, product:products(*)')
+        .eq('cart_id', carts[0].id)
+      
+      if (itemsError) {
+        setCartItems([])
+      } else {
         setCartItems(items || [])
       }
       setLoading(false)

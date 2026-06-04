@@ -7,17 +7,29 @@ export const createClient = () => {
 
   if (!url || !key) {
     console.warn('[Supabase] Missing env vars — running in demo mode')
-    // Return a dummy client that won't crash the app
     return null as any
   }
 
-  const client = createBrowserClient(url, key)
+  // Validate URL format
+  try {
+    new URL(url)
+  } catch {
+    console.warn('[Supabase] Invalid URL format — running in demo mode')
+    return null as any
+  }
 
-  // Set session ID for anonymous cart RLS
-  const sessionId = generateSessionId()
-  client.rpc('set_app_config', { key: 'session_id', value: sessionId }).then(() => {}, () => {})
+  try {
+    const client = createBrowserClient(url, key)
 
-  return client
+    // Set session ID for anonymous cart RLS
+    const sessionId = generateSessionId()
+    client.rpc('set_app_config', { key: 'session_id', value: sessionId }).then(() => {}, () => {})
+
+    return client
+  } catch (err) {
+    console.warn('[Supabase] Failed to create client — running in demo mode', err)
+    return null as any
+  }
 }
 
 export type SupabaseClient = ReturnType<typeof createClient>
