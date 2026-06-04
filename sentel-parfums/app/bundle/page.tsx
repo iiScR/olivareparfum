@@ -11,52 +11,52 @@ import type { Product } from '@/types'
 
 const bundleProducts: Product[] = [
   {
-    id: '1', name: 'Santal Noir', brand_inspiration: 'Tom Ford', description: 'Santal crémeux et fumé',
+    id: '1', name: 'Fruits Rouges', brand_inspiration: 'Tom Ford', description: 'Santal crémeux et fumé',
     price: 89, sizes: [{ size: '10ml', price: 0 }],
     stock: 50, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 10, scent_family: 'Woody',
-    images: ['/images/perfumes/perfume-3.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+    images: ['/images/perfumes/perfume-1.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
   {
-    id: '2', name: 'Rose Velours', brand_inspiration: 'Chanel', description: 'Rose damascène veloutée',
+    id: '2', name: 'Agrumes Luxe', brand_inspiration: 'Chanel', description: 'Rose damascène veloutée',
     price: 79, sizes: [{ size: '10ml', price: 0 }],
     stock: 35, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 8, scent_family: 'Floral',
-    images: ['/images/perfumes/perfume-4.png'], featured: false, category_id: null, created_at: '', updated_at: '',
-  },
-  {
-    id: '3', name: 'Oud Impérial', brand_inspiration: 'YSL', description: 'Oud profond et boisé',
-    price: 99, sizes: [{ size: '10ml', price: 0 }],
-    stock: 25, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 12, scent_family: 'Oriental',
-    images: ['/images/perfumes/perfume-8.png'], featured: false, category_id: null, created_at: '', updated_at: '',
-  },
-  {
-    id: '4', name: 'Citrus Doré', brand_inspiration: 'Louis Vuitton', description: 'Éclat citrus frais',
-    price: 69, sizes: [{ size: '10ml', price: 0 }],
-    stock: 60, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 6, scent_family: 'Fresh',
-    images: ['/images/perfumes/perfume-5.png'], featured: false, category_id: null, created_at: '', updated_at: '',
-  },
-  {
-    id: '5', name: 'Vanille Nuit', brand_inspiration: 'Kayali', description: 'Vanille gourmande',
-    price: 75, sizes: [{ size: '10ml', price: 0 }],
-    stock: 40, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 9, scent_family: 'Gourmand',
-    images: ['/images/perfumes/perfume-6.png'], featured: false, category_id: null, created_at: '', updated_at: '',
-  },
-  {
-    id: '6', name: 'Iris Argent', brand_inspiration: 'Prada', description: 'Iris poudré élégant',
-    price: 85, sizes: [{ size: '10ml', price: 0 }],
-    stock: 30, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 8, scent_family: 'Floral',
     images: ['/images/perfumes/perfume-2.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
   {
-    id: '7', name: 'Bois Mystique', brand_inspiration: 'Tom Ford', description: 'Boisé mystérieux',
-    price: 95, sizes: [{ size: '10ml', price: 0 }],
-    stock: 20, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 11, scent_family: 'Woody',
-    images: [], featured: false, category_id: null, created_at: '', updated_at: '',
+    id: '3', name: 'Coco Vanille', brand_inspiration: 'YSL', description: 'Oud profond et boisé',
+    price: 99, sizes: [{ size: '10ml', price: 0 }],
+    stock: 25, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 12, scent_family: 'Oriental',
+    images: ['/images/perfumes/perfume-3.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
   {
-    id: '8', name: 'Jardin Secret', brand_inspiration: 'Chanel', description: 'Jardin fleuri',
+    id: '4', name: 'Sucré', brand_inspiration: 'Louis Vuitton', description: 'Éclat citrus frais',
+    price: 69, sizes: [{ size: '10ml', price: 0 }],
+    stock: 60, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 6, scent_family: 'Fresh',
+    images: ['/images/perfumes/perfume-4.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+  },
+  {
+    id: '5', name: 'Vanille Royale', brand_inspiration: 'Kayali', description: 'Vanille gourmande',
+    price: 75, sizes: [{ size: '10ml', price: 0 }],
+    stock: 40, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 9, scent_family: 'Gourmand',
+    images: ['/images/perfumes/perfume-5.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+  },
+  {
+    id: '6', name: 'Ambre Doré', brand_inspiration: 'Prada', description: 'Iris poudré élégant',
+    price: 85, sizes: [{ size: '10ml', price: 0 }],
+    stock: 30, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 8, scent_family: 'Floral',
+    images: ['/images/perfumes/perfume-6.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+  },
+  {
+    id: '7', name: 'Oud Impérial', brand_inspiration: 'Tom Ford', description: 'Boisé mystérieux',
+    price: 95, sizes: [{ size: '10ml', price: 0 }],
+    stock: 20, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 11, scent_family: 'Woody',
+    images: ['/images/perfumes/perfume-7.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+  },
+  {
+    id: '8', name: 'Rose Élixir', brand_inspiration: 'Chanel', description: 'Jardin fleuri',
     price: 72, sizes: [{ size: '10ml', price: 0 }],
     stock: 45, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 7, scent_family: 'Floral',
-    images: ['/images/perfumes/perfume-1.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+    images: ['/images/perfumes/perfume-8.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
 ]
 

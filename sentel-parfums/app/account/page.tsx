@@ -6,9 +6,9 @@ import { Package, User, LogOut, ChevronRight } from 'lucide-react'
 import { AnimatedSection } from '@/components/animations/AnimatedSection'
 
 const mockOrders = [
-  { id: 'SNT-A1B2C3', date: '2024-01-15', total: 267, status: 'delivered', items: ['Santal Noir', 'Rose Velours'] },
+  { id: 'SNT-A1B2C3', date: '2024-01-15', total: 267, status: 'delivered', items: ['Fruits Rouges', 'Agrumes Luxe'] },
   { id: 'SNT-D4E5F6', date: '2024-01-10', total: 200, status: 'shipped', items: ['Coffret 3 Parfums'] },
-  { id: 'SNT-G7H8I9', date: '2024-01-05', total: 89, status: 'delivered', items: ['Oud Impérial'] },
+  { id: 'SNT-G7H8I9', date: '2024-01-05', total: 89, status: 'delivered', items: ['Coco Vanille'] },
 ]
 
 const statusConfig: Record<string, { label: string; color: string }> = {

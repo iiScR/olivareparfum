@@ -11,7 +11,7 @@ import type { Product } from '@/types'
 const bundleProducts: Product[] = [
   {
     id: '1',
-    name: 'Santal Noir',
+    name: 'Fruits Rouges',
     brand_inspiration: 'Tom Ford',
     description: '',
     price: 89,
@@ -30,7 +30,7 @@ const bundleProducts: Product[] = [
   },
   {
     id: '2',
-    name: 'Rose Velours',
+    name: 'Agrumes Luxe',
     brand_inspiration: 'Chanel',
     description: '',
     price: 79,
@@ -49,7 +49,7 @@ const bundleProducts: Product[] = [
   },
   {
     id: '3',
-    name: 'Oud Impérial',
+    name: 'Coco Vanille'
     brand_inspiration: 'YSL',
     description: '',
     price: 99,
@@ -68,7 +68,7 @@ const bundleProducts: Product[] = [
   },
   {
     id: '4',
-    name: 'Citrus Doré',
+    name: 'Sucré',
     brand_inspiration: 'Louis Vuitton',
     description: '',
     price: 69,

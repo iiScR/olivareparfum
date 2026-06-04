@@ -11,7 +11,7 @@ const reviews = [
     name: 'Amina B.',
     city: 'Casablanca',
     rating: 5,
-    comment: 'Je suis bluffée par la similarité avec l\'original. Santal Noir est exactement comme celui de Tom Ford à 5x le prix. Livraison rapide et emballage luxueux.',
+    comment: 'Je suis bluffée par la similarité avec l\'original. Fruits Rouges est exactement comme celui de Tom Ford à 5x le prix. Livraison rapide et emballage luxueux.',
   },
   {
     name: 'Karim E.',
@@ -23,7 +23,7 @@ const reviews = [
     name: 'Laila M.',
     city: 'Marrakech',
     rating: 5,
-    comment: 'La tenue est impressionnante — 10 heures facilement sur mes vêtements. Rose Velours est devenu mon signature scent. Merci Olivare !',
+    comment: 'La tenue est impressionnante — 10 heures facilement sur mes vêtements. Agrumes Luxe est devenu mon signature scent. Merci Olivare !',
   },
   {
     name: 'Youssef T.',
