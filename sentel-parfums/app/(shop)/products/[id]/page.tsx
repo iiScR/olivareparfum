@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -8,65 +9,50 @@ import { Star, Clock, Wind, ArrowLeft, Check } from 'lucide-react'
 import { AnimatedSection } from '@/components/animations/AnimatedSection'
 import { AddToCartButton } from '@/components/ui/AddToCartButton'
 import { ProductCard } from '@/components/ui/ProductCard'
+import { useProduct, useProducts } from '@/hooks/useSupabase'
 import { formatPrice } from '@/lib/utils'
-import type { Product } from '@/types'
-
-// Mock product for demo
-const product: Product = {
-  id: 'a1111111-1111-1111-1111-111111111111',
-  name: 'Santal Noir',
-  brand_inspiration: 'Tom Ford',
-  description: 'Un santal crémeux et fumé qui évoque le luxe intemporel. Cette création s\'ouvre sur des notes épicées de cardamome et de gingembre, avant de révéler un cœur de santal précieux enveloppé d\'iris et de cèdre. Le fond chaud d\'ambre, de vanille et de musc laisse une empreinte sensuelle et durable.',
-  price: 89,
-  sizes: [
-    { size: '10ml', price: 45 },
-    { size: '50ml', price: 89 },
-    { size: '100ml', price: 149 },
-  ],
-  stock: 50,
-  top_notes: ['Cardamome', 'Gingembre', 'Bergamote'],
-  heart_notes: ['Santal', 'Iris', 'Cèdre'],
-  base_notes: ['Ambre', 'Vanille', 'Musc'],
-  longevity_hours: 10,
-  scent_family: 'Woody',
-  images: ['/images/perfumes/perfume-1.png'],
-  featured: true,
-  category_id: null,
-  created_at: '',
-  updated_at: '',
-}
-
-const relatedProducts: Product[] = [
-  {
-    id: 'a7777777-7777-7777-7777-777777777777', name: 'Bois Mystique', brand_inspiration: 'Tom Ford', description: '',
-    price: 95, sizes: [{ size: '10ml', price: 48 }, { size: '50ml', price: 95 }, { size: '100ml', price: 159 }],
-    stock: 20, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 11, scent_family: 'Woody',
-    images: ['/images/perfumes/perfume-2.png'], featured: false, category_id: null, created_at: '', updated_at: '',
-  },
-  {
-    id: 'a3333333-3333-3333-3333-333333333333', name: 'Oud Impérial', brand_inspiration: 'YSL', description: '',
-    price: 99, sizes: [{ size: '10ml', price: 50 }, { size: '50ml', price: 99 }, { size: '100ml', price: 169 }],
-    stock: 25, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 12, scent_family: 'Oriental',
-    images: ['/images/perfumes/perfume-4.png'], featured: true, category_id: null, created_at: '', updated_at: '',
-  },
-  {
-    id: 'a5555555-5555-5555-5555-555555555555', name: 'Vanille Nuit', brand_inspiration: 'Kayali', description: '',
-    price: 75, sizes: [{ size: '10ml', price: 38 }, { size: '50ml', price: 75 }, { size: '100ml', price: 129 }],
-    stock: 40, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 9, scent_family: 'Gourmand',
-    images: [], featured: true, category_id: null, created_at: '', updated_at: '',
-  },
-  {
-    id: 'a4444444-4444-4444-4444-444444444444', name: 'Citrus Doré', brand_inspiration: 'Louis Vuitton', description: '',
-    price: 69, sizes: [{ size: '10ml', price: 35 }, { size: '50ml', price: 69 }, { size: '100ml', price: 119 }],
-    stock: 60, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 6, scent_family: 'Fresh',
-    images: ['/images/perfumes/perfume-8.png'], featured: false, category_id: null, created_at: '', updated_at: '',
-  },
-]
 
 export default function ProductDetailPage() {
+  const params = useParams()
+  const id = params.id as string
   const [selectedImage, setSelectedImage] = useState(0)
 
-  const currentPrice = product.sizes[1].price
+  const { product, loading, error } = useProduct(id)
+  const { products: allProducts } = useProducts()
+
+  // Related products: other products from DB, or empty if none
+  const relatedProducts = allProducts
+    .filter((p) => p.id !== id)
+    .slice(0, 4)
+
+  if (loading) {
+    return (
+      <div className="pt-20 lg:pt-24 min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-text-secondary">Chargement du produit...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !product) {
+    return (
+      <div className="pt-20 lg:pt-24 min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="heading-md mb-4">Produit non trouvé</h1>
+          <p className="text-text-secondary mb-6">
+            {error || "Ce produit n'existe pas ou a été retiré."}
+          </p>
+          <Link href="/products" className="btn-primary">
+            Voir tous les parfums
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  const currentPrice = product.sizes[1]?.price || product.price
 
   return (
     <div className="pt-20 lg:pt-24">
@@ -110,7 +96,7 @@ export default function ProductDetailPage() {
                 </div>
                 {/* Thumbnails */}
                 <div className="flex gap-3">
-                  {[0, 1, 2].map((i) => (
+                  {product.images.map((img, i) => (
                     <button
                       key={i}
                       onClick={() => setSelectedImage(i)}
@@ -118,9 +104,13 @@ export default function ProductDetailPage() {
                         selectedImage === i ? 'border-primary' : 'border-border hover:border-text-secondary'
                       }`}
                     >
-                      <div className="w-full h-full bg-surface-elevated flex items-center justify-center text-xs text-text-muted">
-                        {i + 1}
-                      </div>
+                      <Image
+                        src={img}
+                        alt={`${product.name} ${i + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
                     </button>
                   ))}
                 </div>
@@ -157,7 +147,9 @@ export default function ProductDetailPage() {
               </AnimatedSection>
 
               <AnimatedSection delay={0.2}>
-                <p className="body-base mb-6">{product.description}</p>
+                <p className="body-base mb-6">
+                  {product.description || 'Un parfum d\'exception, inspiré des plus grandes maisons de parfumerie.'}
+                </p>
               </AnimatedSection>
 
               {/* Add to cart */}
@@ -194,33 +186,37 @@ export default function ProductDetailPage() {
               </AnimatedSection>
 
               {/* Scent pyramid */}
-              <AnimatedSection delay={0.35}>
-                <h3 className="font-display font-semibold text-lg mb-4">Pyramide olfactive</h3>
-                <div className="space-y-4">
-                  {[
-                    { label: 'Notes de tête', notes: product.top_notes, color: 'bg-primary/20' },
-                    { label: 'Notes de cœur', notes: product.heart_notes, color: 'bg-primary/30' },
-                    { label: 'Notes de fond', notes: product.base_notes, color: 'bg-primary/40' },
-                  ].map((layer) => (
-                    <div key={layer.label}>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium">{layer.label}</span>
-                        <div className={`h-1.5 w-24 rounded-full ${layer.color}`} />
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {layer.notes.map((note) => (
-                          <span
-                            key={note}
-                            className="px-3 py-1 bg-surface-elevated border border-border rounded-full text-xs text-text-secondary"
-                          >
-                            {note}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </AnimatedSection>
+              {(product.top_notes.length > 0 || product.heart_notes.length > 0 || product.base_notes.length > 0) && (
+                <AnimatedSection delay={0.35}>
+                  <h3 className="font-display font-semibold text-lg mb-4">Pyramide olfactive</h3>
+                  <div className="space-y-4">
+                    {[
+                      { label: 'Notes de tête', notes: product.top_notes, color: 'bg-primary/20' },
+                      { label: 'Notes de cœur', notes: product.heart_notes, color: 'bg-primary/30' },
+                      { label: 'Notes de fond', notes: product.base_notes, color: 'bg-primary/40' },
+                    ]
+                      .filter((layer) => layer.notes.length > 0)
+                      .map((layer) => (
+                        <div key={layer.label}>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium">{layer.label}</span>
+                            <div className={`h-1.5 w-24 rounded-full ${layer.color}`} />
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {layer.notes.map((note) => (
+                              <span
+                                key={note}
+                                className="px-3 py-1 bg-surface-elevated border border-border rounded-full text-xs text-text-secondary"
+                              >
+                                {note}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </AnimatedSection>
+              )}
 
               {/* Why customers love */}
               <AnimatedSection delay={0.4}>
@@ -232,7 +228,7 @@ export default function ProductDetailPage() {
                     {[
                       '93% de similarité avec l\'original',
                       '1/5 du prix du parfum original',
-                      'Tenue de 10+ heures sur la peau',
+                      `Tenue de ${product.longevity_hours}+ heures sur la peau`,
                       'Fabriqué avec des ingrédients de qualité premium',
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-3 text-sm text-text-secondary">
@@ -247,14 +243,16 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Related products */}
-          <AnimatedSection className="mt-20">
-            <h2 className="heading-md mb-8">Vous aimerez aussi</h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-              {relatedProducts.map((p, i) => (
-                <ProductCard key={p.id} product={p} index={i} />
-              ))}
-            </div>
-          </AnimatedSection>
+          {relatedProducts.length > 0 && (
+            <AnimatedSection className="mt-20">
+              <h2 className="heading-md mb-8">Vous aimerez aussi</h2>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                {relatedProducts.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} />
+                ))}
+              </div>
+            </AnimatedSection>
+          )}
         </div>
       </div>
     </div>
