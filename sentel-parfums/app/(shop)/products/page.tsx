@@ -21,19 +21,19 @@ const allProducts: Product[] = [
     id: 'a2222222-2222-2222-2222-222222222222', name: 'Rose Velours', brand_inspiration: 'Chanel', description: '',
     price: 79, sizes: [{ size: '10ml', price: 40 }, { size: '50ml', price: 79 }, { size: '100ml', price: 135 }],
     stock: 35, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 8, scent_family: 'Floral',
-    images: ['/images/perfumes/perfume-3.png'], featured: true, category_id: null, created_at: '', updated_at: '',
+    images: ['/images/perfumes/perfume-2.png'], featured: true, category_id: null, created_at: '', updated_at: '',
   },
   {
     id: 'a3333333-3333-3333-3333-333333333333', name: 'Oud Impérial', brand_inspiration: 'YSL', description: '',
     price: 99, sizes: [{ size: '10ml', price: 50 }, { size: '50ml', price: 99 }, { size: '100ml', price: 169 }],
     stock: 25, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 12, scent_family: 'Oriental',
-    images: ['/images/perfumes/perfume-4.png'], featured: true, category_id: null, created_at: '', updated_at: '',
+    images: ['/images/perfumes/perfume-3.png'], featured: true, category_id: null, created_at: '', updated_at: '',
   },
   {
     id: 'a4444444-4444-4444-4444-444444444444', name: 'Citrus Doré', brand_inspiration: 'Louis Vuitton', description: '',
     price: 69, sizes: [{ size: '10ml', price: 35 }, { size: '50ml', price: 69 }, { size: '100ml', price: 119 }],
     stock: 60, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 6, scent_family: 'Fresh',
-    images: ['/images/perfumes/perfume-8.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+    images: ['/images/perfumes/perfume-4.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
   {
     id: 'a5555555-5555-5555-5555-555555555555', name: 'Vanille Nuit', brand_inspiration: 'Kayali', description: '',
@@ -45,19 +45,19 @@ const allProducts: Product[] = [
     id: 'a6666666-6666-6666-6666-666666666666', name: 'Iris Argent', brand_inspiration: 'Prada', description: '',
     price: 85, sizes: [{ size: '10ml', price: 42 }, { size: '50ml', price: 85 }, { size: '100ml', price: 145 }],
     stock: 30, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 8, scent_family: 'Floral',
-    images: ['/images/perfumes/perfume-2.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+    images: ['/images/perfumes/perfume-6.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
   {
     id: 'a7777777-7777-7777-7777-777777777777', name: 'Bois Mystique', brand_inspiration: 'Tom Ford', description: '',
     price: 95, sizes: [{ size: '10ml', price: 48 }, { size: '50ml', price: 95 }, { size: '100ml', price: 159 }],
     stock: 20, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 11, scent_family: 'Woody',
-    images: [], featured: false, category_id: null, created_at: '', updated_at: '',
+    images: ['/images/perfumes/perfume-7.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
   {
     id: 'a8888888-8888-8888-8888-888888888888', name: 'Jardin Secret', brand_inspiration: 'Chanel', description: '',
     price: 72, sizes: [{ size: '10ml', price: 36 }, { size: '50ml', price: 72 }, { size: '100ml', price: 125 }],
     stock: 45, top_notes: [], heart_notes: [], base_notes: [], longevity_hours: 7, scent_family: 'Floral',
-    images: ['/images/perfumes/perfume-7.png'], featured: false, category_id: null, created_at: '', updated_at: '',
+    images: ['/images/perfumes/perfume-8.png'], featured: false, category_id: null, created_at: '', updated_at: '',
   },
 ]
 
