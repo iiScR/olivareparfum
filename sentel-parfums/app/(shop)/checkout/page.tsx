@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Check, CreditCard, Truck, Building2, Wallet } from 'lucide-react'
+import { ArrowLeft, Check, CreditCard, Truck, Building2, Wallet, Loader2 } from 'lucide-react'
 import { AnimatedSection } from '@/components/animations/AnimatedSection'
 import { useCartStore } from '@/lib/store'
 import { useHasMounted } from '@/hooks/useHasMounted'
 import { formatPrice } from '@/lib/utils'
 import { toast } from '@/components/ui/Toaster'
+import { createOrder } from '@/hooks/useSupabase'
 
 const PAYMENT_METHODS = [
   {
@@ -48,6 +49,7 @@ export default function CheckoutPage() {
     city: '',
     postalCode: '',
   })
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,12 +57,37 @@ export default function CheckoutPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const handlePaymentSubmit = () => {
-    // Place order logic here (would connect to Supabase)
-    setStep('confirmation')
-    clearCart()
-    toast('Commande confirmée !', 'success')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+  const handlePaymentSubmit = async () => {
+    if (items.length === 0) return
+
+    setIsPlacingOrder(true)
+    try {
+      const order = await createOrder({
+        total: total,
+        payment_method: paymentMethod,
+        shipping_address: shippingData,
+        items: items.map((item) => ({
+          product_id: item.product_id,
+          quantity: item.quantity,
+          size: item.size,
+          price_at_time:
+            item.product.sizes.find((s) => s.size === item.size)?.price ||
+            item.product.price,
+        })),
+      })
+
+      setStep('confirmation')
+      clearCart()
+      toast(`Commande confirmée ! N° ${order.id.slice(0, 8)}`, 'success')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (err) {
+      toast(
+        err instanceof Error ? err.message : 'Erreur lors de la commande',
+        'error'
+      )
+    } finally {
+      setIsPlacingOrder(false)
+    }
   }
 
   if (hasMounted && items.length === 0 && step !== 'confirmation') {
@@ -307,10 +334,20 @@ export default function CheckoutPage() {
                     </button>
                     <button
                       onClick={handlePaymentSubmit}
-                      className="btn-primary flex-1 flex items-center justify-center gap-2"
+                      disabled={isPlacingOrder}
+                      className="btn-primary flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      Confirmer la commande
-                      <Check className="w-4 h-4" />
+                      {isPlacingOrder ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Traitement...
+                        </>
+                      ) : (
+                        <>
+                          Confirmer la commande
+                          <Check className="w-4 h-4" />
+                        </>
+                      )}
                     </button>
                   </div>
                 </div>

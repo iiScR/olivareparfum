@@ -1,34 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Package, ShoppingCart, Users, TrendingUp, Plus, Edit, Trash2, Search, ArrowLeft } from 'lucide-react'
+import {
+  Package,
+  ShoppingCart,
+  Users,
+  TrendingUp,
+  Plus,
+  Edit,
+  Trash2,
+  Search,
+  ArrowLeft,
+  Loader2,
+} from 'lucide-react'
 import { AnimatedSection } from '@/components/animations/AnimatedSection'
 import { GlowCard } from '@/components/ui/GlowCard'
-
-// Mock admin data
-const stats = [
-  { label: 'Ventes totales', value: '45,230 MAD', icon: TrendingUp, change: '+12%' },
-  { label: 'Commandes', value: '156', icon: ShoppingCart, change: '+8%' },
-  { label: 'Produits', value: '52', icon: Package, change: '+3' },
-  { label: 'Clients', value: '1,240', icon: Users, change: '+24%' },
-]
-
-const recentOrders = [
-  { id: 'ORD-001', customer: 'Amina B.', total: 267, status: 'delivered', date: '2024-01-15' },
-  { id: 'ORD-002', customer: 'Karim E.', total: 200, status: 'shipped', date: '2024-01-14' },
-  { id: 'ORD-003', customer: 'Laila M.', total: 445, status: 'confirmed', date: '2024-01-14' },
-  { id: 'ORD-004', customer: 'Youssef T.', total: 89, status: 'pending', date: '2024-01-13' },
-  { id: 'ORD-005', customer: 'Samira K.', total: 200, status: 'delivered', date: '2024-01-12' },
-]
-
-const mockProducts = [
-  { id: '1', name: 'Santal Noir', brand: 'Tom Ford', price: 89, stock: 50, sales: 45 },
-  { id: '2', name: 'Rose Velours', brand: 'Chanel', price: 79, stock: 35, sales: 38 },
-  { id: '3', name: 'Oud Impérial', brand: 'YSL', price: 99, stock: 25, sales: 32 },
-  { id: '4', name: 'Citrus Doré', brand: 'Louis Vuitton', price: 69, stock: 60, sales: 28 },
-  { id: '5', name: 'Vanille Nuit', brand: 'Kayali', price: 75, stock: 40, sales: 25 },
-]
+import { useProducts, useOrders } from '@/hooks/useSupabase'
+import { formatPrice } from '@/lib/utils'
 
 type Tab = 'dashboard' | 'products' | 'orders'
 
@@ -54,9 +43,47 @@ export default function AdminPage() {
   const [email, setEmail] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
 
+  // Real data hooks
+  const { products: dbProducts, loading: productsLoading } = useProducts()
+  const { orders: dbOrders, loading: ordersLoading } = useOrders()
+
+  // Computed stats
+  const stats = useMemo(() => {
+    const totalRevenue = dbOrders.reduce((sum, o) => sum + (o.total || 0), 0)
+    const totalOrders = dbOrders.length
+    const totalProducts = dbProducts.length
+    const totalCustomers = new Set(dbOrders.map((o) => o.user_id).filter(Boolean)).size
+
+    return [
+      {
+        label: 'Ventes totales',
+        value: formatPrice(totalRevenue),
+        icon: TrendingUp,
+        change: `${totalOrders} commandes`,
+      },
+      {
+        label: 'Commandes',
+        value: String(totalOrders),
+        icon: ShoppingCart,
+        change: `${dbOrders.filter((o) => o.status === 'pending').length} en attente`,
+      },
+      {
+        label: 'Produits',
+        value: String(totalProducts),
+        icon: Package,
+        change: `${dbProducts.filter((p) => p.stock && p.stock < 20).length} stock faible`,
+      },
+      {
+        label: 'Clients',
+        value: String(totalCustomers || dbOrders.length),
+        icon: Users,
+        change: 'uniques',
+      },
+    ]
+  }, [dbOrders, dbProducts])
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    // In production, validate against admin_users table
     if (email.includes('@')) {
       setIsAuthenticated(true)
     }
@@ -102,6 +129,8 @@ export default function AdminPage() {
     )
   }
 
+  const isLoading = productsLoading || ordersLoading
+
   return (
     <div className="pt-20 lg:pt-24 min-h-dvh">
       <div className="section-padding py-8">
@@ -122,11 +151,13 @@ export default function AdminPage() {
 
           {/* Tabs */}
           <div className="flex gap-2 mb-8 border-b border-border pb-1">
-            {([
-              { key: 'dashboard', label: 'Tableau de bord' },
-              { key: 'products', label: 'Produits' },
-              { key: 'orders', label: 'Commandes' },
-            ] as const).map((tab) => (
+            {(
+              [
+                { key: 'dashboard', label: 'Tableau de bord' },
+                { key: 'products', label: 'Produits' },
+                { key: 'orders', label: 'Commandes' },
+              ] as const
+            ).map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
@@ -147,199 +178,271 @@ export default function AdminPage() {
             ))}
           </div>
 
-          <AnimatePresence mode="wait">
-            {/* Dashboard */}
-            {activeTab === 'dashboard' && (
-              <motion.div
-                key="dashboard"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-              >
-                {/* Stats */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                  {stats.map((stat) => {
-                    const Icon = stat.icon
-                    return (
-                      <GlowCard key={stat.label} className="p-5">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Icon className="w-5 h-5 text-primary" />
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <AnimatePresence mode="wait">
+              {/* Dashboard */}
+              {activeTab === 'dashboard' && (
+                <motion.div
+                  key="dashboard"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    {stats.map((stat) => {
+                      const Icon = stat.icon
+                      return (
+                        <GlowCard key={stat.label} className="p-5">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                              <Icon className="w-5 h-5 text-primary" />
+                            </div>
+                            <span className="text-xs text-green-400 font-medium">{stat.change}</span>
                           </div>
-                          <span className="text-xs text-green-400 font-medium">{stat.change}</span>
-                        </div>
-                        <p className="font-display text-2xl font-bold">{stat.value}</p>
-                        <p className="text-xs text-text-muted">{stat.label}</p>
-                      </GlowCard>
-                    )
-                  })}
-                </div>
-
-                {/* Recent orders */}
-                <div className="bg-surface rounded-xl border border-border overflow-hidden">
-                  <div className="p-6 border-b border-border">
-                    <h3 className="font-display font-semibold">Commandes récentes</h3>
+                          <p className="font-display text-2xl font-bold">{stat.value}</p>
+                          <p className="text-xs text-text-muted">{stat.label}</p>
+                        </GlowCard>
+                      )
+                    })}
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Commande</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Client</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Total</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Statut</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {recentOrders.map((order) => (
-                          <tr key={order.id} className="border-b border-border/50 hover:bg-surface-elevated/50 transition-colors">
-                            <td className="px-6 py-4 text-sm font-medium">{order.id}</td>
-                            <td className="px-6 py-4 text-sm text-text-secondary">{order.customer}</td>
-                            <td className="px-6 py-4 text-sm">{order.total} MAD</td>
-                            <td className="px-6 py-4">
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[order.status]}`}>
-                                {statusLabels[order.status]}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 text-sm text-text-muted">{order.date}</td>
+
+                  {/* Recent orders */}
+                  <div className="bg-surface rounded-xl border border-border overflow-hidden">
+                    <div className="p-6 border-b border-border">
+                      <h3 className="font-display font-semibold">Commandes récentes</h3>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Commande
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Total
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Statut
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Date
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Products */}
-            {activeTab === 'products' && (
-              <motion.div
-                key="products"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-                    <input
-                      type="text"
-                      placeholder="Rechercher un produit..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 pr-4 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:border-primary transition-colors w-64"
-                    />
-                  </div>
-                  <button className="btn-primary flex items-center gap-2 text-sm">
-                    <Plus className="w-4 h-4" />
-                    Ajouter un produit
-                  </button>
-                </div>
-
-                <div className="bg-surface rounded-xl border border-border overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Produit</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Marque</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Prix</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Stock</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Ventes</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {mockProducts
-                          .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                          .map((product) => (
-                            <tr key={product.id} className="border-b border-border/50 hover:bg-surface-elevated/50 transition-colors">
-                              <td className="px-6 py-4 text-sm font-medium">{product.name}</td>
-                              <td className="px-6 py-4 text-sm text-text-secondary">{product.brand}</td>
-                              <td className="px-6 py-4 text-sm">{product.price} MAD</td>
-                              <td className="px-6 py-4 text-sm">{product.stock}</td>
-                              <td className="px-6 py-4 text-sm">{product.sales}</td>
+                        </thead>
+                        <tbody>
+                          {dbOrders.slice(0, 5).map((order) => (
+                            <tr
+                              key={order.id}
+                              className="border-b border-border/50 hover:bg-surface-elevated/50 transition-colors"
+                            >
+                              <td className="px-6 py-4 text-sm font-medium">
+                                {order.id.slice(0, 8).toUpperCase()}
+                              </td>
+                              <td className="px-6 py-4 text-sm">{formatPrice(order.total)}</td>
                               <td className="px-6 py-4">
-                                <div className="flex items-center gap-2">
-                                  <button className="p-1.5 rounded hover:bg-primary/10 hover:text-primary transition-colors">
-                                    <Edit className="w-4 h-4" />
-                                  </button>
-                                  <button className="p-1.5 rounded hover:bg-red-500/10 hover:text-red-400 transition-colors">
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                </div>
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || statusColors.pending}`}
+                                >
+                                  {statusLabels[order.status] || order.status}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-sm text-text-muted">
+                                {new Date(order.created_at).toLocaleDateString('fr-FR')}
                               </td>
                             </tr>
                           ))}
-                      </tbody>
-                    </table>
+                          {dbOrders.length === 0 && (
+                            <tr>
+                              <td colSpan={4} className="px-6 py-8 text-center text-text-muted text-sm">
+                                Aucune commande pour le moment
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            )}
+                </motion.div>
+              )}
 
-            {/* Orders */}
-            {activeTab === 'orders' && (
-              <motion.div
-                key="orders"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-              >
-                <div className="bg-surface rounded-xl border border-border overflow-hidden">
-                  <div className="p-6 border-b border-border flex items-center justify-between">
-                    <h3 className="font-display font-semibold">Toutes les commandes</h3>
+              {/* Products */}
+              {activeTab === 'products' && (
+                <motion.div
+                  key="products"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <div className="flex items-center justify-between mb-6">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                       <input
                         type="text"
-                        placeholder="Rechercher..."
-                        className="pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:border-primary transition-colors w-48"
+                        placeholder="Rechercher un produit..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10 pr-4 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:border-primary transition-colors w-64"
                       />
                     </div>
+                    <button className="btn-primary flex items-center gap-2 text-sm">
+                      <Plus className="w-4 h-4" />
+                      Ajouter un produit
+                    </button>
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Commande</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Client</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Total</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Statut</th>
-                          <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {recentOrders.map((order) => (
-                          <tr key={order.id} className="border-b border-border/50 hover:bg-surface-elevated/50 transition-colors">
-                            <td className="px-6 py-4 text-sm font-medium">{order.id}</td>
-                            <td className="px-6 py-4 text-sm text-text-secondary">{order.customer}</td>
-                            <td className="px-6 py-4 text-sm">{order.total} MAD</td>
-                            <td className="px-6 py-4">
-                              <select
-                                defaultValue={order.status}
-                                className="bg-background border border-border rounded px-2 py-1 text-xs focus:outline-none focus:border-primary"
-                              >
-                                <option value="pending">En attente</option>
-                                <option value="confirmed">Confirmée</option>
-                                <option value="shipped">Expédiée</option>
-                                <option value="delivered">Livrée</option>
-                                <option value="cancelled">Annulée</option>
-                              </select>
-                            </td>
-                            <td className="px-6 py-4">
-                              <button className="text-xs text-primary hover:underline">Voir détails</button>
-                            </td>
+
+                  <div className="bg-surface rounded-xl border border-border overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Produit
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Marque
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Prix
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Stock
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Actions
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {dbProducts
+                            .filter((p) =>
+                              p.name.toLowerCase().includes(searchQuery.toLowerCase())
+                            )
+                            .map((product) => (
+                              <tr
+                                key={product.id}
+                                className="border-b border-border/50 hover:bg-surface-elevated/50 transition-colors"
+                              >
+                                <td className="px-6 py-4 text-sm font-medium">{product.name}</td>
+                                <td className="px-6 py-4 text-sm text-text-secondary">
+                                  {product.brand_inspiration}
+                                </td>
+                                <td className="px-6 py-4 text-sm">
+                                  {formatPrice(product.price)}
+                                </td>
+                                <td className="px-6 py-4 text-sm">
+                                  <span
+                                    className={
+                                      product.stock < 20 ? 'text-red-400' : 'text-text-secondary'
+                                    }
+                                  >
+                                    {product.stock}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4">
+                                  <div className="flex items-center gap-2">
+                                    <button className="p-1.5 rounded hover:bg-primary/10 hover:text-primary transition-colors">
+                                      <Edit className="w-4 h-4" />
+                                    </button>
+                                    <button className="p-1.5 rounded hover:bg-red-500/10 hover:text-red-400 transition-colors">
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          {dbProducts.length === 0 && (
+                            <tr>
+                              <td colSpan={5} className="px-6 py-8 text-center text-text-muted text-sm">
+                                Aucun produit trouvé
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                </motion.div>
+              )}
+
+              {/* Orders */}
+              {activeTab === 'orders' && (
+                <motion.div
+                  key="orders"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <div className="bg-surface rounded-xl border border-border overflow-hidden">
+                    <div className="p-6 border-b border-border flex items-center justify-between">
+                      <h3 className="font-display font-semibold">Toutes les commandes</h3>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Commande
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Total
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Articles
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Statut
+                            </th>
+                            <th className="text-left px-6 py-3 text-xs font-medium text-text-muted uppercase tracking-wider">
+                              Date
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {dbOrders.map((order) => (
+                            <tr
+                              key={order.id}
+                              className="border-b border-border/50 hover:bg-surface-elevated/50 transition-colors"
+                            >
+                              <td className="px-6 py-4 text-sm font-medium">
+                                {order.id.slice(0, 8).toUpperCase()}
+                              </td>
+                              <td className="px-6 py-4 text-sm">{formatPrice(order.total)}</td>
+                              <td className="px-6 py-4 text-sm text-text-secondary">
+                                {order.order_items?.length || 0} article
+                                {(order.order_items?.length || 0) !== 1 ? 's' : ''}
+                              </td>
+                              <td className="px-6 py-4">
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || statusColors.pending}`}
+                                >
+                                  {statusLabels[order.status] || order.status}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-sm text-text-muted">
+                                {new Date(order.created_at).toLocaleDateString('fr-FR')}
+                              </td>
+                            </tr>
+                          ))}
+                          {dbOrders.length === 0 && (
+                            <tr>
+                              <td colSpan={5} className="px-6 py-8 text-center text-text-muted text-sm">
+                                Aucune commande pour le moment
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          )}
         </div>
       </div>
     </div>

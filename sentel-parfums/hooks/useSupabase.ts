@@ -191,6 +191,84 @@ export function useAuth() {
   return { user, loading, supabase }
 }
 
+export function useOrders() {
+  const [orders, setOrders] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+    async function fetchOrders() {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*, order_items(*)')
+        .order('created_at', { ascending: false })
+      
+      if (error) {
+        console.error('[useOrders] Error:', error)
+        setOrders([])
+      } else {
+        setOrders(data || [])
+      }
+      setLoading(false)
+    }
+
+    fetchOrders()
+  }, [])
+
+  return { orders, loading }
+}
+
+export async function createOrder(orderData: {
+  total: number
+  payment_method: string
+  shipping_address: object
+  items: Array<{
+    product_id: string
+    quantity: number
+    size: string
+    price_at_time: number
+  }>
+}) {
+  if (!supabase) {
+    throw new Error('Supabase not configured')
+  }
+
+  // Insert order
+  const { data: order, error: orderError } = await supabase
+    .from('orders')
+    .insert({
+      total: orderData.total,
+      payment_method: orderData.payment_method,
+      shipping_address: orderData.shipping_address,
+    })
+    .select()
+    .single()
+
+  if (orderError || !order) {
+    throw new Error(orderError?.message || 'Failed to create order')
+  }
+
+  // Insert order items
+  const orderItems = orderData.items.map((item) => ({
+    order_id: order.id,
+    product_id: item.product_id,
+    quantity: item.quantity,
+    size: item.size,
+    price_at_time: item.price_at_time,
+  }))
+
+  const { error: itemsError } = await supabase.from('order_items').insert(orderItems)
+
+  if (itemsError) {
+    throw new Error(itemsError.message)
+  }
+
+  return order
+}
+
 export function useCart() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [loading, setLoading] = useState(true)
