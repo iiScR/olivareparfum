@@ -11,7 +11,6 @@ import {
   Edit,
   Trash2,
   Search,
-  ArrowLeft,
   Loader2,
 } from 'lucide-react'
 import { AnimatedSection } from '@/components/animations/AnimatedSection'
@@ -39,8 +38,6 @@ const statusLabels: Record<string, string> = {
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [email, setEmail] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
 
   // Real data hooks
@@ -82,53 +79,6 @@ export default function AdminPage() {
     ]
   }, [dbOrders, dbProducts])
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (email.includes('@')) {
-      setIsAuthenticated(true)
-    }
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-dvh flex items-center justify-center section-padding">
-        <AnimatedSection className="w-full max-w-md">
-          <div className="bg-surface rounded-2xl border border-border p-8">
-            <div className="text-center mb-8">
-              <h1 className="font-display text-2xl font-bold mb-2">Administration</h1>
-              <p className="text-sm text-text-secondary">Connectez-vous pour accéder au panel admin</p>
-            </div>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Email admin</label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
-                  placeholder="admin@sentelparfums.ma"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Mot de passe</label>
-                <input
-                  type="password"
-                  required
-                  className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
-                  placeholder="••••••••"
-                />
-              </div>
-              <button type="submit" className="btn-primary w-full">
-                Se connecter
-              </button>
-            </form>
-          </div>
-        </AnimatedSection>
-      </div>
-    )
-  }
-
   const isLoading = productsLoading || ordersLoading
 
   return (
@@ -136,17 +86,9 @@ export default function AdminPage() {
       <div className="section-padding py-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <div>
-              <h1 className="heading-md">Panel Admin</h1>
-              <p className="text-sm text-text-muted">Gérez vos produits et commandes</p>
-            </div>
-            <button
-              onClick={() => setIsAuthenticated(false)}
-              className="text-sm text-text-muted hover:text-primary transition-colors"
-            >
-              Déconnexion
-            </button>
+          <div className="mb-8">
+            <h1 className="heading-md">Panel Admin</h1>
+            <p className="text-sm text-text-muted">Gérez vos produits et commandes</p>
           </div>
 
           {/* Tabs */}
